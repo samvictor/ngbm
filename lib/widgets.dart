@@ -434,7 +434,7 @@ class NewsState extends State<News> {
             : new MyDrawer('/news'),
           body: (loading)?
             new Center(
-                child: new Text('Loading...', style: new TextStyle(fontSize: 20.0))
+                child: new Text('Latest news will be loaded here...', style: new TextStyle(fontSize: 20.0))
             ):
             new GridView.count(
                 children: imgs,
