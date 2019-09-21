@@ -12,7 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:intl/intl.dart';
+//import 'package:intl/intl.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -373,7 +373,7 @@ class NewsState extends State<News> {
         String data = '';
         try {
             data = await http.read('https://us-central1-hybrid-text-604.cloudfunctions.net/fb');
-            var data_json = JSON.decode(data)['photos']['data'];
+            var data_json = jsonDecode(data)['photos']['data'];
             var this_img_url;
             var this_big_url;
             //var img = null;
@@ -1713,7 +1713,7 @@ class MyDrawer extends StatelessWidget {
                         '/mini_page/0', '/mini_page/1', '/about', 
                         '/give', '/news', '/'];
     
-    List <Widget> _icons = [Icons.home, Icons.map, Icons.slideshow, Icons.smartphone,
+    List <IconData> _icons = [Icons.home, Icons.map, Icons.slideshow, Icons.smartphone,
                             Icons.library_books, Icons.people_outline, Icons.people_outline, 
                             Icons.person_outline, Icons.favorite_border, Icons.notifications_none];
     Color _icon_color = Colors.white;

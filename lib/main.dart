@@ -71,9 +71,9 @@ class MyCustomRoute<T> extends MaterialPageRoute<T> {
         
       case 1: {
         return  new SlideTransition(
-          position: new FractionalOffsetTween(
-            begin: new FractionalOffset(-1.0, 0.0),
-            end: FractionalOffset.topLeft,
+          position: new Tween<Offset>(
+            begin: new Offset(-1.0, 0.0),
+            end: Offset(0, 0),
           ).animate(animation),
           child: child
         );
@@ -82,9 +82,9 @@ class MyCustomRoute<T> extends MaterialPageRoute<T> {
         
       case 2: {
         return  new SlideTransition(
-          position: new FractionalOffsetTween(
-            begin: new FractionalOffset(-1.0, 0.0),
-            end: FractionalOffset.topLeft,
+          position: new Tween<Offset>(
+            begin: new Offset(-1.0, 0.0),
+            end: Offset(0, 0),
           ).animate(animation),
           child: child
         );
@@ -263,9 +263,9 @@ class _BossManState extends State<BossMan> with WidgetsBindingObserver, TickerPr
   //get isPaused => playerState == PlayerState.paused;
 
   get durationText =>
-      duration != null ? duration.toString().split('.').first : '';
+      '';//duration != null ? duration.toString().split('.').first : '';
   get positionText =>
-      position != null ? position.toString().split('.').first : '';
+      '';//position != null ? position.toString().split('.').first : '';
 
   
   
@@ -805,28 +805,28 @@ class _BossManState extends State<BossMan> with WidgetsBindingObserver, TickerPr
 
     audioPlayer.setDurationHandler((d) => setState(() {
           //print('_AudioAppState.setDurationHandler => d ${d}');
-          duration = d;
+          //duration = d;
         }));
 
     audioPlayer.setPositionHandler((p) => setState(() {
           //print('_AudioAppState.setPositionHandler => p ${p}');
-          position = p;
+          //position = p;
         }));
 
     audioPlayer.setCompletionHandler(() {
         
-      onComplete();
-        setState(() {
-        position = duration;
-      });
+//      onComplete();
+//        setState(() {
+//        position = duration;
+//      });
     });
 
     audioPlayer.setErrorHandler((msg) {
       print('audioPlayer error : $msg');
       setState(() {
         //playerState = PlayerState.stopped;
-        duration = new Duration(seconds: 0);
-        position = new Duration(seconds: 0);
+        //duration = new Duration(seconds: 0);
+        //position = new Duration(seconds: 0);
       });
     });
   }
@@ -835,7 +835,7 @@ class _BossManState extends State<BossMan> with WidgetsBindingObserver, TickerPr
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    controller.dispose();
+    //controller.dispose();
     super.dispose();
   }
 
