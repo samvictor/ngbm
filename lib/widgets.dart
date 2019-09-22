@@ -368,206 +368,54 @@ class News extends StatefulWidget {
   @override
   NewsState createState() => new NewsState();
 }
-    
-class NewsState extends State<News> {
-    String pics = 'Loading...';
-    bool loading = true;
-    Map data_json = {};
-    bool error = false;
-    List <Widget> imgs = [];
-    var img = new Text('loading...');
-    
-    _update_news() async {
-        String data = '';
-        try {
-            data = await http.read('https://us-central1-hybrid-text-604.cloudfunctions.net/fb');
-            var data_json = jsonDecode(data)['photos']['data'];
-            var this_img_url;
-            var this_big_url;
-            //var img = null;
-            for (int i = 0; i < data_json.length; i++) {
-                this_img_url = data_json[i]['picture'];
-                this_big_url = data_json[i]['images'][0]['source'];
-                imgs.insert(0,  
-                    new Stack(
-                        children: <Widget> [
-                            new Image.network(this_img_url, fit: BoxFit.cover),
-                            new Image.network(this_big_url, fit: BoxFit.cover),
-                            new InkWell(
-                                onTap: () => launchURL(data_json[i]['link']), 
-                            ),
-                        ],
-                        fit: StackFit.expand,
-                    )
-                );
-            }
-            
-            if (mounted)
-                setState ( () {
-                    //pics = data;        
-                    loading = false;
-                });
-        }
-        catch (e) {
-            print (e);
-            if (mounted)
-                setState(() {
-                    error = true;
-                });
-            return;
-        }
-        
-        if (mounted)
-            setState ( () {
-                //pics = data;        
-                loading = false;
-            });
-    }
-    @override
-    initState() {
-        _update_news();
-        super.initState();
-    }
-    
-    @override
-    Widget build(BuildContext context) {
-        new_notif = false;
-        return new Scaffold (
-          appBar: new AppBar(
-            title: new Text('Announcements'),
-            backgroundColor: app_bar_color
-          ),
-          drawer:  defaultTargetPlatform == TargetPlatform.iOS         
-            ? null                                              
-            : new MyDrawer('/news'),
-          body: (loading)?
-            new Center(
-                child: new Text('Latest news will be loaded here...', style: new TextStyle(fontSize: 20.0))
-            ):
-            new GridView.count(
-                children: imgs,
-                crossAxisCount: 2,
-                primary: true,
-                crossAxisSpacing: 2.0,
-                mainAxisSpacing: 2.0,
-            ),
-        );
-    }
-}
 
-
-/*
-class News extends StatefulWidget {
-  @override
-  NewsState createState() => new NewsState();
-}
-    
 class NewsState extends State<News> {
-  
-  final DatabaseReference _feed_ref = FirebaseDatabase.instance.reference().child('all_feed');
-  //StreamSubscription<Event> _feed_sub;
-  var _feed_sub;
-  
-  @override
-  void initState() {
-    super.initState();
-    FirebaseDatabase.instance.setPersistenceEnabled(true);
-    FirebaseDatabase.instance.setPersistenceCacheSizeBytes(10000000);
-    _feed_ref.keepSynced(true);
-    _feed_sub = _feed_ref.limitToLast(10).onChildAdded.listen((Event event) {
-      print('Child added: ${event.snapshot.value}');
+  num _stackToView = 1;
+  final _key = UniqueKey();
+
+  void _handleLoad(String value) {
+    setState(() {
+      _stackToView = 0;
     });
   }
-  
-  @override
-  void dispose() {
-    super.dispose();
-    _feed_sub.cancel();
-  }
-    
-  Widget news_item(DataSnapshot snapshot) {
-    var data = snapshot.value;
-    return new Padding ( 
-        child: new Container(
-        child: new Material (
-            child: new InkWell (
-                child: new Padding (
-                    child: new Column ( 
-                        children:  <Widget> [
-                            new Text(
-                                data['message'].toString(),
-                                style: new TextStyle(color: Colors.white),
-                            ),
-                            new Container(height: 15.0),
-                            new Container(color: new Color(0x40000000), height: 0.5),
-                            new Container(height: 4.0),
-                            new Text(
-                                new DateFormat.yMMMEd().addPattern('-').add_jm().format(
-                                    new DateTime.fromMillisecondsSinceEpoch(
-                                        int.parse(
-                                            data['created_time'].toString() + '000'
-                                        )
-                                    )
-                                ),
-                                style: new TextStyle(color: new Color(0x60ffffff)),
-                            ),
-                        ],
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                    ),
-                    padding: new EdgeInsets.all(15.0),
-                ),
-                onLongPress: () {
-                    if (data['source'] == 'fb') {
-                        fb_url('https://www.facebook.com/' + data['id']);
-                    }
-                },
-            ),
-            color: Colors.teal[900],
-            //padding: new EdgeInsets.all(10.0),
-            // height: 80.0,
-            //minWidth: 3000.0,
-            elevation: 4.0,
-            type: MaterialType.button,
-        ),
-        width: 3000.0
-        ),
-        padding: new EdgeInsets.all(5.0),
-    );
-  }  
-    
+
   @override
   Widget build(BuildContext context) {
-    new_notif = false;
-    
-    return new Scaffold (
-      appBar: new AppBar(
-        title: new Text('Upcoming Events'),
-        backgroundColor: app_bar_color
-      ),
-      drawer:  defaultTargetPlatform == TargetPlatform.iOS         
-        ? null                                              
-        : new MyDrawer('/news'),
-      body: new Container ( 
-        child: new FirebaseAnimatedList(
-          key: new ValueKey<bool>(false),
-          query: _feed_ref,
-          reverse: false,
-          sort: (DataSnapshot a, DataSnapshot b) => b.key.compareTo(a.key),
-          itemBuilder: (BuildContext context, DataSnapshot snapshot,
-              Animation<double> animation, int index) {
-            return new SizeTransition(
-              sizeFactor: animation,
-              child: news_item(snapshot),
-            );
-          },
+    return new Scaffold(
+        appBar: new AppBar(
+            title: new Text('News'),
+            backgroundColor: app_bar_color
         ),
-        color: Colors.grey[900],
-      ),
+        drawer:  defaultTargetPlatform == TargetPlatform.iOS
+            ? null
+            : new MyDrawer('/news'),
+        body: IndexedStack(
+          index: _stackToView,
+          children: [
+            Column(
+              children: < Widget > [
+                Expanded(
+                    child: WebView(
+                      key: _key,
+                      javascriptMode: JavascriptMode.unrestricted,
+                      initialUrl: 'https://hybrid-text-604.firebaseapp.com/embed/',
+                      onPageFinished: _handleLoad,
+                    )
+                ),
+              ],
+            ),
+            Container(
+              color: Colors.white,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ],
+        )
     );
   }
 }
 
-*/
   
 class About extends StatelessWidget {
   About();
