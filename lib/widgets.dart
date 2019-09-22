@@ -13,6 +13,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 //import 'package:intl/intl.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
 
 import 'package:http/http.dart' as http;
 
@@ -117,7 +119,7 @@ class HomeBtns extends StatelessWidget {
                     fit: StackFit.expand,
                 ),
                 onTap: () {
-                    if (id == 7) // bible
+                    if (id == -1)//7) // bible
                         launchURL('http://biblewebapp.com');
                     else
                         Navigator.of(context).pushNamed(route);
@@ -136,75 +138,54 @@ class HomeBtns extends StatelessWidget {
 
 
 // ======================================== SCREENS ===========================================
-class Give extends StatelessWidget {
-  Give();
-  
+class Give extends StatefulWidget {
+  @override
+  _GiveState createState() => _GiveState();
+}
+
+class _GiveState extends State<Give> {
+  num _stackToView = 1;
+  final _key = UniqueKey();
+
+  void _handleLoad(String value) {
+    setState(() {
+      _stackToView = 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return new Scaffold (
-      appBar: new AppBar(
-        title: new Text('Give'),
-        backgroundColor: app_bar_color
-      ),
-      drawer:  defaultTargetPlatform == TargetPlatform.iOS         
-        ? null                                              
-        : new MyDrawer('/give'),
-      body: new Column(
-        children: <Widget> [
-            build_flex_center (
-                new InkWell (
-                    child: new Stack (
-                        children: <Widget> [
-                                new Image.asset(
-                                      'img/mis/laptop.jpg',
-                                      fit: BoxFit.cover,
-                                ),
-                          new Center(
-                            child: new Container(
-                              decoration: new BoxDecoration(
-                                color: new Color(0x30000000),
-                              ),
-                            ),
-                          ),
-                          text_container(
-                            'Give Online'.toUpperCase(),
-                            font_size: 40.0,
-                          ),
-                        ],
-                        fit: StackFit.expand,
-                    ),
-                    onTap: () =>
-                        launchURL('http://my.simplegive.com/dl/?uid=new219209'),
-                ), 
+    return new Scaffold(
+        appBar: new AppBar(
+            title: new Text('Give'),
+            backgroundColor: app_bar_color
+        ),
+        drawer:  defaultTargetPlatform == TargetPlatform.iOS
+            ? null
+            : new MyDrawer('/give'),
+        body: IndexedStack(
+          index: _stackToView,
+          children: [
+            Column(
+              children: < Widget > [
+                Expanded(
+                    child: WebView(
+                      key: _key,
+                      javascriptMode: JavascriptMode.unrestricted,
+                      initialUrl: 'https://my.simplegive.com/dl/?uid=new219209',
+                      onPageFinished: _handleLoad,
+                    )
+                ),
+              ],
             ),
-            build_flex_center (
-                new InkWell (
-                    child: new Stack (
-                        children: <Widget> [
-                                new Image.asset(
-                                      'img/home/texting.jpg',
-                                      fit: BoxFit.cover,
-                                ),
-                          new Center(
-                            child: new Container(
-                              decoration: new BoxDecoration(
-                                color: new Color(0x30000000),
-                              ),
-                            ),
-                          ),
-                          text_container(
-                            'Text to Give'.toUpperCase(),
-                            font_size: 40.0,
-                          ),
-                        ],
-                        fit: StackFit.expand,
-                    ),
-                    onTap: () => 
-                        launchURL('sms:3472692663'),
-                ), 
+            Container(
+              color: Colors.white,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
             ),
-        ]
-      ),
+          ],
+        )
     );
   }
 }
@@ -304,28 +285,55 @@ class Help extends StatelessWidget {
   }
 }
 
-  
-class Bible extends StatelessWidget {
-  Bible();
-  
+
+class Bible extends StatefulWidget {
+  @override
+  _BibleState createState() => _BibleState();
+}
+
+class _BibleState extends State<Bible> {
+  num _stackToView = 1;
+  final _key = UniqueKey();
+
+  void _handleLoad(String value) {
+    setState(() {
+      _stackToView = 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return new Scaffold (
-      appBar: new AppBar(
-        title: new Text('Bible'),
-        backgroundColor: app_bar_color
-      ),
-      drawer:  defaultTargetPlatform == TargetPlatform.iOS         
-        ? null                                              
-        : new MyDrawer('/bible'),
-      body: new Column(
-        children: <Widget> [
-          build_flex_center (
-            new Text('Bible Page'),
-          ),
-          new BotBar(),
-        ]
-      ),
+    return new Scaffold(
+        appBar: new AppBar(
+            title: new Text('Bible'),
+            backgroundColor: app_bar_color
+        ),
+        drawer:  defaultTargetPlatform == TargetPlatform.iOS
+            ? null
+            : new MyDrawer('/bible'),
+        body: IndexedStack(
+          index: _stackToView,
+          children: [
+            Column(
+              children: < Widget > [
+                Expanded(
+                    child: WebView(
+                      key: _key,
+                      javascriptMode: JavascriptMode.unrestricted,
+                      initialUrl: 'https://bible.com/bible',
+                      onPageFinished: _handleLoad,
+                    )
+                ),
+              ],
+            ),
+            Container(
+              color: Colors.white,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ],
+        )
     );
   }
 }
@@ -1679,16 +1687,7 @@ class MyDrawer extends StatelessWidget {
                 new Divider( color: new Color(0xa0000000)),
                 _settings_tile(9, context),         // upcoming events
                 _settings_tile(8, context),         // give
-                new Container (
-                    child: new ListTile(
-                      leading: new Icon(Icons.library_books, color: (_curr_route == '/bible')? _icon_color: _icon_color_dull),
-                      title: new Text('Bible', style: new TextStyle(
-                        color: (_curr_route == '/bible')? Colors.white : Colors.grey[300], 
-                      )),
-                      onTap: () => launchURL('http://biblewebapp.com'),
-                    ),
-                    color:  (_curr_route == '/bible')? new Color(0x50000000): null,
-                ),
+                _settings_tile(4, context),         // bible
                 _settings_tile(2, context),         // media
                 new Divider( color: new Color(0xa0000000)),
                 //_settings_tile(5, context),         // swat
