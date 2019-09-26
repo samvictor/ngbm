@@ -436,23 +436,23 @@ class About extends StatelessWidget {
             children: <Widget> [
                 new Container(height: 10.0),
                 new Row ( children: <Widget> [
-                    new Flexible(child: new Container(),flex: 2,),
+                    new Flexible(child: new Container(),flex: 3,),
                     new Flexible (
                         child: new Image.asset('img/mis/pastor.jpg', fit: BoxFit.contain),
-                        flex: 2,
+                        flex: 4,
                     ),
-                    new Flexible(child: new Container(), flex: 2,),
+                    new Flexible(child: new Container(), flex: 3,),
                 ]),
-                new Container(height: 10.0),
-                new Text('Dr. John H. Boyd II', style: new TextStyle(fontWeight: FontWeight.w500, fontSize: 20.0)),
-                new Container(height: 10.0),
-                new Text(pastor_bio),
+                new Container(height: 30.0),
+                new Text('Dr. John H. Boyd II', style: new TextStyle(fontWeight: FontWeight.w500, fontSize: 24.0)),
+                new Container(height: 16.0),
+                new Text(pastor_bio, style: new TextStyle(fontWeight: FontWeight.w300, fontSize: 18.0)),
                 new Container(height: 20.0),
             ]
           ),
-          padding: new EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+          padding: new EdgeInsets.fromLTRB(18.0, 10.0, 18.0, 10.0),
         ),
-        color: new Color(0xffe0e8f3),
+        color: new Color(0xfff0f8ff),
       ),
     );
   }
@@ -558,16 +558,11 @@ class DemandState extends State<Demand> {
                 new InkWell (
                     child: new Stack (
                         children: <Widget> [
-                          new Center (
-                            child: new Row (
-                              children: <Widget>[ new Expanded (
-                                child: new Image.asset(
+                          new Image.asset(
                                       'img/mis/demand.jpg',
                                       fit: BoxFit.cover,
                                 ),
-                              ),],
-                            ),
-                          ),
+
                           new Center(
                             child: new Container(
                               decoration: new BoxDecoration(
@@ -1104,7 +1099,7 @@ class FindUs extends StatelessWidget {
                         ),
                         padding: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                     ),
-                    new Container(height: 12.0),            
+                    new Container(height: 15.0),
         
                     new Padding (
                         child: new MaterialButton (  
@@ -1124,11 +1119,11 @@ class FindUs extends StatelessWidget {
                             ),
                             onPressed: () => launchURL('https://www.google.com/maps/place/New+Greater+Bethel+Ministries'),
                             height: 60.0,
-                            color: Colors.teal,
+                            color: new Color(0xFF2150a8),
                         ),
                         padding: new EdgeInsets.symmetric( horizontal: 8.0 ),
                     ),
-                    new Container(height: 8.0),
+                    new Container(height: 10.0),
                     
                     new Padding (
                         child: new MaterialButton (
@@ -1151,11 +1146,11 @@ class FindUs extends StatelessWidget {
                             ),
                             onPressed: () => launchURL('tel:+1 718 740 4357'),
                             height: 55.0,
-                            color: Colors.teal,
+                            color: new Color(0xFF2150a8),
                         ),
                         padding: new EdgeInsets.symmetric(horizontal: 8.0),
                     ),
-                    new Container(height: 12.0),
+                    new Container(height: 15.0),
                     
                     new Container (
                         child: new Padding (
@@ -1188,9 +1183,9 @@ class FindUs extends StatelessWidget {
                                     _build_entry('5:00 am - Morning Glory Prayer'),
                                 ],
                             ),
-                            padding: new EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 40.0),
+                            padding: new EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 50.0),
                         ),
-                        color:  new Color(0xFF016080),
+                        color:  new Color(0xFF2150a8),
                     ),
                 ]
             ),
